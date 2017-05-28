@@ -43,6 +43,7 @@
     [super viewDidLoad];
     
     [self createBlockMan];
+    [self createWalls];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self action:@selector(tapRecognized:)];
@@ -51,7 +52,20 @@
 
 - (void) tapRecognized: (UITapGestureRecognizer *) sender
 {
-    [self.animator addBehavior:self.gravity];
+    CGPoint tapPoint = [sender locationInView:self.view];
+    CGVector direction = CGVectorMake((tapPoint.x - self.view.center.x)
+                                      / (self.view.frame.size.width / 2),
+                                      (tapPoint.y - self.view.center.y)
+                                      / (self.view.frame.size.height / 2));
+    [self changeGravityDirection:direction];
+}
+
+- (void) changeGravityDirection: (CGVector) direction
+{
+    self.gravity.gravityDirection = direction;
+    
+    if (!self.gravity.dynamicAnimator)
+        [self.animator addBehavior:self.gravity];
 }
 
 - (UIGravityBehavior *) gravity
@@ -69,7 +83,6 @@
     
     return _animator;
 }
-
 
 - (void) createBlockMan
 {
@@ -132,4 +145,12 @@
     }];
 }
 
+
+- (void) createWalls
+{
+    UICollisionBehavior *collisionBehavior = [[UICollisionBehavior alloc]
+                                              initWithItems:self.bodyParts];
+    collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
+    [self.animator addBehavior:collisionBehavior];
+}
 @end
