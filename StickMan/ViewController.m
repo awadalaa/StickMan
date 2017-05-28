@@ -145,12 +145,16 @@
     }];
 }
 
-
 - (void) createWalls
 {
     UICollisionBehavior *collisionBehavior = [[UICollisionBehavior alloc]
                                               initWithItems:self.bodyParts];
     collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
     [self.animator addBehavior:collisionBehavior];
+    
+    UIDynamicItemBehavior *headBounce = [[UIDynamicItemBehavior alloc]
+                                         initWithItems:@[self.head]];
+    headBounce.elasticity = 0.75;
+    [self.animator addBehavior:headBounce];
 }
 @end
