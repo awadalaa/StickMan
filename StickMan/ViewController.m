@@ -43,7 +43,33 @@
     [super viewDidLoad];
     
     [self createBlockMan];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self action:@selector(tapRecognized:)];
+    [self.view addGestureRecognizer:tap];
 }
+
+- (void) tapRecognized: (UITapGestureRecognizer *) sender
+{
+    [self.animator addBehavior:self.gravity];
+}
+
+- (UIGravityBehavior *) gravity
+{
+    if (!_gravity)
+        _gravity = [[UIGravityBehavior alloc] initWithItems:self.bodyParts];
+    
+    return _gravity;
+}
+
+- (UIDynamicAnimator *) animator
+{
+    if (!_animator)
+        _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
+    
+    return _animator;
+}
+
 
 - (void) createBlockMan
 {
