@@ -48,6 +48,40 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self action:@selector(tapRecognized:)];
     [self.view addGestureRecognizer:tap];
+    
+    UITapGestureRecognizer *headTap = [[UITapGestureRecognizer alloc]
+                                       initWithTarget:self action:@selector(headTap:)];
+    [self.head addGestureRecognizer:headTap];
+    
+}
+
+- (void) headTap: (UIGestureRecognizer *) sender
+{
+    [self.animator removeAllBehaviors];
+    
+    [UIView animateWithDuration:2.0
+                          delay:0.0
+         usingSpringWithDamping:.4
+          initialSpringVelocity:20
+                        options:UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         [self.bodyParts enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                             [(UIView *)obj setTransform:CGAffineTransformIdentity];
+                         }];
+                         
+                         self.head.frame = kHeadInitialPosition;
+                         self.torso.frame = kTorsoInitialPosition;
+                         self.upperLegs.frame = kUpperLegInitialPosition;
+                         self.leftLeg.frame = kLeftLegInitialPosition;
+                         self.rightLeg.frame = kRightLegInitialPosition;
+                         self.upperRightArm.frame = kRightUpperArmInitialPosition;
+                         self.upperLeftArm.frame = kLeftUpperArmInitialPosition;
+                         self.lowerRightArm.frame = kRightLowerArmInitialPosition;
+                         self.lowerLeftArm.frame = kLeftLowerArmInitialPosition;
+                     }
+                     completion:^(BOOL finished) {
+                         [self createWalls];
+                     }];
 }
 
 - (void) tapRecognized: (UITapGestureRecognizer *) sender
